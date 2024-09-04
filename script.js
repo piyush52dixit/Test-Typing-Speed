@@ -58,3 +58,5 @@ function matchExactWords() {
       return singleTypedWord;
     });
 }
+//CHecking author
+

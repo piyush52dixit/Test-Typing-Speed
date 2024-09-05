@@ -44,19 +44,34 @@ inputArea.addEventListener("input", () => {
     startButton.disabled = false;
   }
 });
-
 function matchExactWords() {
-  const singleTypedWordArr = inputArea.value.trim().split("");
-  const singleParaWordArr = textToType.trim().split("");
+  let typedText = inputArea.value; // Don't trim, to catch incomplete words
+  let typedWords = typedText.split(/\s+/); // Split typed text by spaces
+  let originalWords = textToType.trim().split(/\s+/); // Split original text
 
-  singleParaWordArr?.length > 0 &&
-    singleParaWordArr?.map((singleParaWord) => {
-      return singleParaWord;
-    });
-  singleTypedWordArr?.length > 0 &&
-    singleTypedWordArr?.map((singleTypedWord) => {
-      return singleTypedWord;
-    });
+  let highlightedText = "";
+  let typedLength = typedWords.length;
+
+  for (let i = 0; i < typedWords.length; i++) {
+    let typedWord = typedWords[i];
+    let originalWord = originalWords[i] || ""; // Handle extra typed words
+
+    // Compare partially typed word with original word
+    if (originalWord.startsWith(typedWord)) {
+      highlightedText += `<span style="color: green;">${typedWord}</span> `;
+    } else {
+      highlightedText += `<span style="color: red;">${typedWord}</span> `;
+    }
+  }
+
+  // Add remaining original words in grey
+  if (typedWords.length < originalWords.length) {
+    for (let i = typedWords.length; i < originalWords.length; i++) {
+      highlightedText += `<span style="color: grey;">${originalWords[i]}</span> `;
+    }
+  }
+
+  document.getElementById("highlighted-text").innerHTML = highlightedText;
 }
-//CHecking author
 
+inputArea.addEventListener("input", matchExactWords);
